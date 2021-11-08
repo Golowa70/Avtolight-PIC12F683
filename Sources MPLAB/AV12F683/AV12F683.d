@@ -1,0 +1,1 @@
+ AV12F683.d  AV12F683.p1:  C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/AV12F683.c C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/inputPins.h C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/podgot12f683.h C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/initConst.h C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/pwm1.h

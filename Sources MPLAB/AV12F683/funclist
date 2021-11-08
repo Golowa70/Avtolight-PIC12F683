@@ -1,0 +1,11 @@
+_main: CODE, 536 0 12
+_blankingled1: CODE, 439 0 23
+_mainled1: CODE, 13 0 177
+_fnInputpins: CODE, 190 0 109
+_fnPodgot: CODE, 370 0 41
+_gotosleep: CODE, 520 0 16
+_lightingled1: CODE, 485 0 18
+_tmr0: CODE, 299 0 71
+_fnPwm1: CODE, 462 0 11
+___lbmod: CODE, 411 0 28
+Total: 506

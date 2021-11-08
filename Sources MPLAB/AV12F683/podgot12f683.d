@@ -1,0 +1,1 @@
+ podgot12f683.d  podgot12f683.p1:  C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/podgot12f683.c C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/podgot12f683.h C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/initConst.h

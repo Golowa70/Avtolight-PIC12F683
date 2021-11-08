@@ -1,0 +1,1 @@
+ inputPins.d  inputPins.p1:  C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/inputPins.c C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/initConst.h C:/Program\ Files\ (x86)/Microchip/Projects/AV12F683/inputpins.h

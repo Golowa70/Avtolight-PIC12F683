@@ -1,0 +1,1680 @@
+
+
+HI-TECH Software PIC PRO Macro Assembler V9.71a build 6446 
+                                                                                               Thu Jun 05 23:56:32 2014
+
+HI-TECH Software Omniscient Code Generator (PRO mode) build 6446
+     1                           	processor	12F683
+     2                           	opt	pw 120
+     3                           	opt	pm
+     4                           	psect	idataBANK0,global,class=CODE,delta=2
+     5                           	psect	cinit,global,class=CODE,delta=2
+     6                           	psect	bitbssCOMMON,global,bit,class=COMMON,space=1,delta=1
+     7                           	psect	bssCOMMON,global,class=COMMON,space=1,delta=1
+     8                           	psect	bssBANK0,global,class=BANK0,space=1,delta=1
+     9                           	psect	dataBANK0,global,class=BANK0,space=1,delta=1
+    10                           	psect	clrtext,global,class=CODE,delta=2
+    11                           	psect	cstackCOMMON,global,class=COMMON,space=1,delta=1
+    12                           	psect	cstackBANK0,global,class=BANK0,space=1,delta=1
+    13                           	psect	maintext,global,class=CODE,delta=2
+    14                           	psect	text252,local,class=CODE,delta=2
+    15                           	psect	text253,local,class=CODE,delta=2
+    16                           	psect	text254,local,class=CODE,delta=2
+    17                           	psect	text255,local,class=CODE,delta=2
+    18                           	psect	text256,local,class=CODE,delta=2
+    19                           	psect	text257,local,class=CODE,delta=2
+    20                           	psect	text258,local,class=CODE,delta=2
+    21                           	psect	intentry,global,class=CODE,delta=2
+    22                           	psect	text259,local,class=CODE,delta=2
+    23                           	psect	text260,local,class=CODE,delta=2
+    24                           	psect	text261,local,class=CODE,delta=2
+    25                           	psect	pa_nodes,global,class=CODE,delta=2
+    26                           	dabs	1,0x7E,2
+    27  000A                     
+    28                           	psect	idataBANK0
+    29  0000                     __pidataBANK0:	
+    30  001F                     _ADCON0	set	31
+    31  0015                     _CCP1CON	set	21
+    32  0013                     _CCPR1L	set	19
+    33  0019                     _CMCON0	set	25
+    34  0005                     _GPIO	set	5
+    35  000B                     _INTCON	set	11
+    36  0010                     _T1CON	set	16
+    37  0012                     _T2CON	set	18
+    38  000F                     _TMR1H	set	15
+    39  000E                     _TMR1L	set	14
+    40  005B                     _GPIE	set	91
+    41  0058                     _GPIF	set	88
+    42  0028                     _GPIO0	set	40
+    43  0029                     _GPIO1	set	41
+    44  002B                     _GPIO3	set	43
+    45  002C                     _GPIO4	set	44
+    46  002D                     _GPIO5	set	45
+    47  005D                     _T0IE	set	93
+    48  005A                     _T0IF	set	90
+    49  0060                     _TMR1IF	set	96
+    50  009F                     _ANSEL	set	159
+    51  0096                     _IOC	set	150
+    52  0081                     _OPTION	set	129
+    53  008F                     _OSCCON	set	143
+    54  008C                     _PIE1	set	140
+    55  0092                     _PR2	set	146
+    56  0085                     _TRISIO	set	133
+    57  0095                     _WPU	set	149
+    58  0460                     _TMR1IE	set	1120
+    59                           
+    60                           	psect	cinit
+    61  01F7                     start_initialization:	
+    62                           
+    63                           ; Clear objects allocated to BITCOMMON
+    64  01F7  01FD               	clrf	(__pbitbssCOMMON/(0+8))& (0+127)
+    65                           
+    66                           ; Clear objects allocated to COMMON
+    67  01F8  3077               	movlw	low __pbssCOMMON
+    68  01F9  0084               	movwf	4
+    69  01FA  307D               	movlw	low (__pbssCOMMON+6)
+    70  01FB  2224               	fcall	clear_ram
+    71                           
+    72                           ; Clear objects allocated to BANK0
+    73  01FC  1383               	bcf	3,7	;select IRP bank0
+    74  01FD  3020               	movlw	low __pbssBANK0
+    75  01FE  0084               	movwf	4
+    76  01FF  3039               	movlw	low (__pbssBANK0+25)
+    77  0200  2224               	fcall	clear_ram
+    78                           
+    79                           ;initializer for _alarmOff
+    80  0201  3001               	movlw	1
+    81  0202  00BE               	movwf	__pdataBANK0& (0+127)
+    82                           
+    83                           ;initializer for _doorClose
+    84  0203  00BF               	movwf	(__pdataBANK0+1)& (0+127)
+    85                           
+    86                           ;initializer for _keyInLockOn
+    87  0204  00C0               	movwf	(__pdataBANK0+2)& (0+127)
+    88                           
+    89                           ;initializer for _keyPowerOn
+    90  0205  00C1               	movwf	(__pdataBANK0+3)& (0+127)
+    91  0206                     end_of_initialization:	
+    92                           ;End of C runtime variable initialization code
+    93                           
+    94  0206  0183               	clrf	3
+    95  0207  2A18               	ljmp	_main	;jump to C main() function
+    96                           
+    97                           	psect	bitbssCOMMON
+    98  03E8                     __pbitbssCOMMON:	
+    99  03E8                     _flagtimer1:	
+   100  03E8                     	ds	1
+   101  03E9                     _flagtimer2:	
+   102  03E9                     	ds	1
+   103  03EA                     _flagtimer3:	
+   104  03EA                     	ds	1
+   105                           
+   106                           	psect	bssCOMMON
+   107  0077                     __pbssCOMMON:	
+   108  0077                     _tmrSleep:	
+   109  0077                     	ds	2
+   110  0079                     _adAlarm:	
+   111  0079                     	ds	1
+   112  007A                     _adAlarm2:	
+   113  007A                     	ds	1
+   114  007B                     _adDoor:	
+   115  007B                     	ds	1
+   116  007C                     _adDoor2:	
+   117  007C                     	ds	1
+   118                           
+   119                           	psect	bssBANK0
+   120  0020                     __pbssBANK0:	
+   121  0020                     _door:	
+   122  0020                     	ds	8
+   123  0028                     _key:	
+   124  0028                     	ds	3
+   125  002B                     _pwmduty1:	
+   126  002B                     	ds	2
+   127  002D                     _adKeyInLock:	
+   128  002D                     	ds	1
+   129  002E                     _adKeyInLock2:	
+   130  002E                     	ds	1
+   131  002F                     _adKeyPower:	
+   132  002F                     	ds	1
+   133  0030                     _adKeyPower2:	
+   134  0030                     	ds	1
+   135  0031                     _alarm:	
+   136  0031                     	ds	1
+   137  0032                     _alarmOn:	
+   138  0032                     	ds	1
+   139  0033                     _doorOpen:	
+   140  0033                     	ds	1
+   141  0034                     _flagalarm:	
+   142  0034                     	ds	1
+   143  0035                     _keyInLockOff:	
+   144  0035                     	ds	1
+   145  0036                     _keyPowerOff:	
+   146  0036                     	ds	1
+   147  0037                     _tic:	
+   148  0037                     	ds	1
+   149  0038                     _togel:	
+   150  0038                     	ds	1
+   151                           
+   152                           	psect	dataBANK0
+   153  003E                     __pdataBANK0:	
+   154  003E                     _alarmOff:	
+   155  003E                     	ds	1
+   156  003F                     _doorClose:	
+   157  003F                     	ds	1
+   158  0040                     _keyInLockOn:	
+   159  0040                     	ds	1
+   160  0041                     _keyPowerOn:	
+   161  0041                     	ds	1
+   162                           
+   163                           	psect	clrtext
+   164  0224                     clear_ram:	
+   165                           ;	Called with FSR containing the base address, and
+   166                           ;	W with the last address+1
+   167                           
+   168  0224  0064               	clrwdt	;clear the watchdog before getting into this loop
+   169  0225                     clrloop:	
+   170  0225  0180               	clrf	0	;clear RAM location pointed to by FSR
+   171  0226  0A84               	incf	4,f	;increment pointer
+   172  0227  0604               	xorwf	4,w	;XOR with final address
+   173  0228  1903               	btfsc	3,2	;have we reached the end yet?
+   174  0229  3400               	retlw	0	;all done for this memory range, return
+   175  022A  0604               	xorwf	4,w	;XOR again to restore value
+   176  022B  2A25               	goto	clrloop	;do the next byte
+   177                           
+   178                           	psect	cstackCOMMON
+   179  0070                     __pcstackCOMMON:	
+   180  0070                     ?_fnInputpins:	
+   181  0070                     ??_fnInputpins:	
+   182                           ; 0 bytes @ 0x0
+   183                           
+   184  0070                     ?_fnPwm1:	
+   185                           ; 0 bytes @ 0x0
+   186                           
+   187  0070                     ?_fnPodgot:	
+   188                           ; 0 bytes @ 0x0
+   189                           
+   190  0070                     ?_gotosleep:	
+   191                           ; 0 bytes @ 0x0
+   192                           
+   193  0070                     ?_lightingled1:	
+   194                           ; 0 bytes @ 0x0
+   195                           
+   196  0070                     ?_blankingled1:	
+   197                           ; 0 bytes @ 0x0
+   198                           
+   199  0070                     ?_mainled1:	
+   200                           ; 0 bytes @ 0x0
+   201                           
+   202  0070                     ?_tmr0:	
+   203                           ; 0 bytes @ 0x0
+   204                           
+   205  0070                     ?_main:	
+   206                           ; 0 bytes @ 0x0
+   207                           
+   208  0070                     fnPwm1@n:	
+   209                           ; 0 bytes @ 0x0
+   210                           
+   211                           
+   212                           ; 2 bytes @ 0x0
+   213  0070                     	ds	2
+   214  0072                     ??_fnPwm1:	
+   215                           
+   216                           ; 0 bytes @ 0x2
+   217  0072                     	ds	2
+   218  0074                     ??_tmr0:	
+   219                           
+   220                           ; 0 bytes @ 0x4
+   221  0074                     	ds	3
+   222                           
+   223                           	psect	cstackBANK0
+   224  0039                     __pcstackBANK0:	
+   225  0039                     ??_fnPodgot:	
+   226  0039                     ??_gotosleep:	
+   227                           ; 0 bytes @ 0x0
+   228                           
+   229  0039                     ?___lbmod:	
+   230                           ; 0 bytes @ 0x0
+   231                           
+   232  0039                     ___lbmod@divisor:	
+   233                           ; 1 bytes @ 0x0
+   234                           
+   235                           
+   236                           ; 1 bytes @ 0x0
+   237  0039                     	ds	1
+   238  003A                     ??___lbmod:	
+   239                           
+   240                           ; 0 bytes @ 0x1
+   241  003A                     	ds	1
+   242  003B                     ___lbmod@dividend:	
+   243                           
+   244                           ; 1 bytes @ 0x2
+   245  003B                     	ds	1
+   246  003C                     ___lbmod@counter:	
+   247                           
+   248                           ; 1 bytes @ 0x3
+   249  003C                     	ds	1
+   250  003D                     ___lbmod@rem:	
+   251                           
+   252                           ; 1 bytes @ 0x4
+   253  003D                     	ds	1
+   254  003E                     ??_lightingled1:	
+   255  003E                     ??_blankingled1:	
+   256                           ; 0 bytes @ 0x5
+   257                           
+   258  003E                     ??_mainled1:	
+   259                           ; 0 bytes @ 0x5
+   260                           
+   261  003E                     ??_main:	
+   262                           ; 0 bytes @ 0x5
+   263                           
+   264                           
+   265                           	psect	maintext
+   266  0218                     __pmaintext:	
+   267                           ; 0 bytes @ 0x5
+   268 ;;Data sizes: Strings 0, constant 0, data 4, bss 31, persistent 0 stack 0
+   269 ;;Auto spaces:   Size  Autos    Used
+   270 ;; COMMON          14      7      14
+   271 ;; BANK0           80      5      34
+   272 ;; BANK1           32      0       0
+   273 ;;
+   274 ;; Pointer list with targets:
+   275 ;;
+   276 ;; Critical Paths under _main in COMMON
+   277 ;;
+   278 ;;   None.
+   279 ;;
+   280 ;; Critical Paths under _tmr0 in COMMON
+   281 ;;
+   282 ;;   _tmr0->_fnPwm1
+   283 ;;
+   284 ;; Critical Paths under _main in BANK0
+   285 ;;
+   286 ;;   _blankingled1->___lbmod
+   287 ;;   _lightingled1->___lbmod
+   288 ;;
+   289 ;; Critical Paths under _tmr0 in BANK0
+   290 ;;
+   291 ;;   None.
+   292 ;;
+   293 ;; Critical Paths under _main in BANK1
+   294 ;;
+   295 ;;   None.
+   296 ;;
+   297 ;; Critical Paths under _tmr0 in BANK1
+   298 ;;
+   299 ;;   None.
+   300 ;;
+   301 ;;Main: autosize = 0, tempsize = 0, incstack = 0, save=0
+   302 ;;
+   303 ;;
+   304 ;;Call Graph Tables:
+   305 ;;
+   306 ;; ---------------------------------------------------------------------------------
+   307 ;; (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
+   308 ;; ---------------------------------------------------------------------------------
+   309 ;; (0) _main                                                 0     0      0     318
+   310 ;;                           _fnPodgot
+   311 ;;                           _mainled1
+   312 ;;                          _gotosleep
+   313 ;; ---------------------------------------------------------------------------------
+   314 ;; (1) _mainled1                                             0     0      0     318
+   315 ;;                       _lightingled1
+   316 ;;                       _blankingled1
+   317 ;; ---------------------------------------------------------------------------------
+   318 ;; (2) _blankingled1                                         0     0      0     159
+   319 ;;                            ___lbmod
+   320 ;; ---------------------------------------------------------------------------------
+   321 ;; (2) _lightingled1                                         0     0      0     159
+   322 ;;                            ___lbmod
+   323 ;; ---------------------------------------------------------------------------------
+   324 ;; (3) ___lbmod                                              5     4      1     159
+   325 ;;                                              0 BANK0      5     4      1
+   326 ;; ---------------------------------------------------------------------------------
+   327 ;; (1) _fnPodgot                                             0     0      0       0
+   328 ;; ---------------------------------------------------------------------------------
+   329 ;; (1) _gotosleep                                            0     0      0       0
+   330 ;; ---------------------------------------------------------------------------------
+   331 ;; Estimated maximum stack depth 3
+   332 ;; ---------------------------------------------------------------------------------
+   333 ;; (Depth) Function   	        Calls       Base Space   Used Autos Params    Refs
+   334 ;; ---------------------------------------------------------------------------------
+   335 ;; (4) _tmr0                                                 3     3      0      88
+   336 ;;                                              4 COMMON     3     3      0
+   337 ;;                        _fnInputpins
+   338 ;;                             _fnPwm1
+   339 ;; ---------------------------------------------------------------------------------
+   340 ;; (5) _fnPwm1                                               4     2      2      88
+   341 ;;                                              0 COMMON     4     2      2
+   342 ;; ---------------------------------------------------------------------------------
+   343 ;; (5) _fnInputpins                                          0     0      0       0
+   344 ;; ---------------------------------------------------------------------------------
+   345 ;; Estimated maximum stack depth 5
+   346 ;; ---------------------------------------------------------------------------------
+   347 ;; Call Graph Graphs:
+   348 ;; _main (ROOT)
+   349 ;;   _fnPodgot
+   350 ;;   _mainled1
+   351 ;;     _lightingled1
+   352 ;;       ___lbmod
+   353 ;;     _blankingled1
+   354 ;;       ___lbmod
+   355 ;;   _gotosleep
+   356 ;;
+   357 ;; _tmr0 (ROOT)
+   358 ;;   _fnInputpins
+   359 ;;   _fnPwm1
+   360 ;;
+   361 ;; Address spaces:
+   362 ;;Name               Size   Autos  Total    Cost      Usage
+   363 ;;SFR1                 0      0       0       2        0.0%
+   364 ;;BITSFR1              0      0       0       2        0.0%
+   365 ;;BANK1               20      0       0       5        0.0%
+   366 ;;BITBANK1            20      0       0       7        0.0%
+   367 ;;CODE                 0      0       0       0        0.0%
+   368 ;;DATA                 0      0      37       8        0.0%
+   369 ;;ABS                  0      0      30       6        0.0%
+   370 ;;NULL                 0      0       0       0        0.0%
+   371 ;;STACK                0      0       7       2        0.0%
+   372 ;;BANK0               50      5      22       4       42.5%
+   373 ;;BITBANK0            50      0       0       3        0.0%
+   374 ;;SFR0                 0      0       0       1        0.0%
+   375 ;;BITSFR0              0      0       0       1        0.0%
+   376 ;;COMMON               E      7       E       1      100.0%
+   377 ;;BITCOMMON            E      0       1       0        7.1%
+   378 ;;EEDATA             100      0       0       0        0.0%
+   379                           
+   380                           
+   381 ;; *************** function _main *****************
+   382 ;; Defined at:
+   383 ;;		line 253 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\AV12F683.c"
+   384 ;; Parameters:    Size  Location     Type
+   385 ;;		None
+   386 ;; Auto vars:     Size  Location     Type
+   387 ;;		None
+   388 ;; Return value:  Size  Location     Type
+   389 ;;		None               void
+   390 ;; Registers used:
+   391 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
+   392 ;; Tracked objects:
+   393 ;;		On entry : 17F/0
+   394 ;;		On exit  : 17F/0
+   395 ;;		Unchanged: FFE80/0
+   396 ;; Data sizes:     COMMON   BANK0   BANK1
+   397 ;;      Params:         0       0       0
+   398 ;;      Locals:         0       0       0
+   399 ;;      Temps:          0       0       0
+   400 ;;      Totals:         0       0       0
+   401 ;;Total ram usage:        0 bytes
+   402 ;; Hardware stack levels required when called:    5
+   403 ;; This function calls:
+   404 ;;		_fnPodgot
+   405 ;;		_mainled1
+   406 ;;		_gotosleep
+   407 ;; This function is called by:
+   408 ;;		Startup code after reset
+   409 ;; This function uses a non-reentrant model
+   410 ;;
+   411  0218                     _main:	
+   412                           
+   413                           ;AV12F683.c: 255: fnPodgot();
+   414                           
+   415                           ; Regs used in _main: [wreg-fsr0h+status,2+status,0+pclath+cstack]
+   416  0218  2172               	fcall	_fnPodgot
+   417                           
+   418                           ;AV12F683.c: 256: door.status=1;
+   419  0219  3001               	movlw	1
+   420  021A  1283               	bcf	3,5	;RP0=0, select bank0
+   421  021B  00A1               	movwf	_door+1	;volatile
+   422  021C                     l2896:	
+   423  021C  0064               	clrwdt	;#
+   424                           
+   425                           ;AV12F683.c: 262: mainled1();
+   426  021D  200D               	fcall	_mainled1
+   427                           
+   428                           ;AV12F683.c: 264: if(pwmduty1==0 ){
+   429  021E  082C               	movf	_pwmduty1+1,w
+   430  021F  042B               	iorwf	_pwmduty1,w
+   431  0220  1D03               	skipz
+   432  0221  2A1C               	goto	l2896
+   433                           
+   434                           ;AV12F683.c: 265: gotosleep();
+   435  0222  2208               	fcall	_gotosleep
+   436  0223  2A1C               	goto	l2896
+   437  0224                     __end_of_main:	
+   438                           
+   439                           	psect	text252
+   440  000D                     __ptext252:	
+   441 ;; =============== function _main ends ============
+   442                           
+   443                           
+   444 ;; *************** function _mainled1 *****************
+   445 ;; Defined at:
+   446 ;;		line 94 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\AV12F683.c"
+   447 ;; Parameters:    Size  Location     Type
+   448 ;;		None
+   449 ;; Auto vars:     Size  Location     Type
+   450 ;;		None
+   451 ;; Return value:  Size  Location     Type
+   452 ;;		None               void
+   453 ;; Registers used:
+   454 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
+   455 ;; Tracked objects:
+   456 ;;		On entry : 17F/0
+   457 ;;		On exit  : 17F/0
+   458 ;;		Unchanged: FFE80/0
+   459 ;; Data sizes:     COMMON   BANK0   BANK1
+   460 ;;      Params:         0       0       0
+   461 ;;      Locals:         0       0       0
+   462 ;;      Temps:          0       0       0
+   463 ;;      Totals:         0       0       0
+   464 ;;Total ram usage:        0 bytes
+   465 ;; Hardware stack levels used:    1
+   466 ;; Hardware stack levels required when called:    4
+   467 ;; This function calls:
+   468 ;;		_lightingled1
+   469 ;;		_blankingled1
+   470 ;; This function is called by:
+   471 ;;		_main
+   472 ;; This function uses a non-reentrant model
+   473 ;;
+   474  000D                     _mainled1:	
+   475                           
+   476                           ;AV12F683.c: 95: if(key.power==1 && key.in_lock==1)key.flag=1;
+   477                           
+   478                           ; Regs used in _mainled1: [wreg-fsr0h+status,2+status,0+pclath+cstack]
+   479  000D  0B2A               	decfsz	_key+2,w
+   480  000E  2813               	goto	l2780
+   481  000F  0B29               	decfsz	_key+1,w
+   482  0010  2813               	goto	l2780
+   483  0011  01A8               	clrf	_key
+   484  0012  0AA8               	incf	_key,f
+   485  0013                     l2780:	
+   486                           
+   487                           ;AV12F683.c: 96: if(door.status==1)door.flag=0;
+   488  0013  0B21               	decfsz	_door+1,w	;volatile
+   489  0014  2816               	goto	l2784
+   490  0015  01A0               	clrf	_door	;volatile
+   491  0016                     l2784:	
+   492                           
+   493                           ;AV12F683.c: 97: if(alarm==1)flagalarm=1;
+   494  0016  0B31               	decfsz	_alarm,w
+   495  0017  28AD               	goto	l2890
+   496  0018  01B4               	clrf	_flagalarm
+   497  0019  0AB4               	incf	_flagalarm,f
+   498  001A  28AD               	goto	l2890
+   499  001B                     l2788:	
+   500                           
+   501                           ;AV12F683.c: 104: if(door.status==0 && door.flag==0 && alarm==0){togel=1;}
+   502  001B  08A1               	movf	_door+1,f
+   503  001C  1D03               	skipz
+   504  001D  2826               	goto	l2796
+   505  001E  08A0               	movf	_door,f
+   506  001F  1D03               	skipz
+   507  0020  2826               	goto	l2796
+   508  0021  08B1               	movf	_alarm,f
+   509  0022  1D03               	skipz
+   510  0023  2826               	goto	l2796
+   511  0024  01B8               	clrf	_togel
+   512  0025  0AB8               	incf	_togel,f
+   513  0026                     l2796:	
+   514                           
+   515                           ;AV12F683.c: 105: if(alarm==0 && flagalarm ==1 ){flagalarm=0;togel=1;}
+   516  0026  08B1               	movf	_alarm,f
+   517  0027  1D03               	skipz
+   518  0028  282E               	goto	l2804
+   519  0029  0B34               	decfsz	_flagalarm,w
+   520  002A  282E               	goto	l2804
+   521  002B  01B4               	clrf	_flagalarm
+   522  002C  01B8               	clrf	_togel
+   523  002D  0AB8               	incf	_togel,f
+   524  002E                     l2804:	
+   525                           
+   526                           ;AV12F683.c: 106: if(key.in_lock==0 && key.flag==1 && key.power==0 && alarm==0 ){key.fla
+      +                          g=0;togel=1;}
+   527  002E  08A9               	movf	_key+1,f
+   528  002F  1903               	btfsc	3,2
+   529  0030  0B28               	decfsz	_key,w
+   530  0031  0008               	return
+   531  0032  08AA               	movf	_key+2,f
+   532  0033  1D03               	skipz
+   533  0034  0008               	return
+   534  0035  08B1               	movf	_alarm,f
+   535  0036  1D03               	skipz
+   536  0037  0008               	return
+   537  0038  01A8               	clrf	_key
+   538  0039  01B8               	clrf	_togel
+   539  003A  0AB8               	incf	_togel,f
+   540  003B  0008               	return
+   541  003C                     l2816:	
+   542                           
+   543                           ;AV12F683.c: 110: lightingled1();
+   544  003C  21E5               	fcall	_lightingled1
+   545                           
+   546                           ;AV12F683.c: 111: if(door.status==1 && key.power==1){togel=4;}
+   547  003D  0B21               	decfsz	_door+1,w	;volatile
+   548  003E  2843               	goto	l413
+   549  003F  0B2A               	decfsz	_key+2,w
+   550  0040  2843               	goto	l413
+   551  0041  3004               	movlw	4
+   552  0042  00B8               	movwf	_togel
+   553  0043                     l413:	
+   554                           
+   555                           ;AV12F683.c: 112: if(alarm==1){togel=4;}
+   556  0043  0B31               	decfsz	_alarm,w
+   557  0044  2847               	goto	l414
+   558  0045  3004               	movlw	4
+   559  0046  00B8               	movwf	_togel
+   560  0047                     l414:	
+   561                           
+   562                           ;AV12F683.c: 113: if(pwmduty1==pwmMax){togel=2;} break;
+   563  0047  0A2B               	incf	_pwmduty1,w
+   564  0048  3003               	movlw	3
+   565  0049  1903               	skipnz
+   566  004A  062C               	xorwf	_pwmduty1+1,w
+   567  004B  1D03               	skipz
+   568  004C  0008               	return
+   569  004D  3002               	movlw	2
+   570  004E  00B8               	movwf	_togel
+   571  004F  0008               	return
+   572  0050                     l2828:	
+   573                           
+   574                           ;AV12F683.c: 116: if(door.status==1){flagtimer1=0;door.flag=0;togel=3;}
+   575  0050  0B21               	decfsz	_door+1,w	;volatile
+   576  0051  2856               	goto	l2836
+   577  0052  107D               	bcf	_flagtimer1/(0+8),_flagtimer1& (0+7)
+   578  0053  01A0               	clrf	_door	;volatile
+   579  0054  3003               	movlw	3
+   580  0055  00B8               	movwf	_togel
+   581  0056                     l2836:	
+   582                           
+   583                           ;AV12F683.c: 117: if(door.status==0){
+   584  0056  08A1               	movf	_door+1,f
+   585  0057  1D03               	skipz
+   586  0058  0008               	return
+   587                           
+   588                           ;AV12F683.c: 118: flagtimer2=0;
+   589  0059  10FD               	bcf	_flagtimer2/(0+8),_flagtimer2& (0+7)
+   590                           
+   591                           ;AV12F683.c: 119: if(flagtimer1==0){door.tmrOpen = -300000; flagtimer1=1;}
+   592  005A  187D               	btfsc	_flagtimer1/(0+8),_flagtimer1& (0+7)
+   593  005B  2865               	goto	l419
+   594  005C  30FF               	movlw	255
+   595  005D  00A5               	movwf	_door+5	;volatile
+   596  005E  30FB               	movlw	251
+   597  005F  00A4               	movwf	_door+4	;volatile
+   598  0060  306C               	movlw	108
+   599  0061  00A3               	movwf	_door+3	;volatile
+   600  0062  3020               	movlw	32
+   601  0063  00A2               	movwf	_door+2	;volatile
+   602  0064  147D               	bsf	_flagtimer1/(0+8),_flagtimer1& (0+7)
+   603  0065                     l419:	
+   604                           
+   605                           ;AV12F683.c: 120: if(door.tmrOpen==0){door.flag=1;togel=4;}
+   606  0065  0825               	movf	_door+5,w	;volatile
+   607  0066  0424               	iorwf	_door+4,w	;volatile
+   608  0067  0423               	iorwf	_door+3,w	;volatile
+   609  0068  0422               	iorwf	_door+2,w	;volatile
+   610  0069  1D03               	skipz
+   611  006A  286F               	goto	l420
+   612  006B  3001               	movlw	1
+   613  006C  00A0               	movwf	_door	;volatile
+   614  006D  3004               	movlw	4
+   615  006E  00B8               	movwf	_togel
+   616  006F                     l420:	
+   617                           
+   618                           ;AV12F683.c: 121: if(alarm==1){togel=4;}
+   619  006F  0B31               	decfsz	_alarm,w
+   620  0070  0008               	return
+   621  0071  3004               	movlw	4
+   622  0072  00B8               	movwf	_togel
+   623  0073  0008               	return
+   624  0074                     l422:	
+   625                           ;AV12F683.c: 125: case 3 :
+   626                           
+   627                           
+   628                           ;AV12F683.c: 126: if(flagtimer2==0){door.tmrClose = -30000; flagtimer2=1;}
+   629  0074  18FD               	btfsc	_flagtimer2/(0+8),_flagtimer2& (0+7)
+   630  0075  287B               	goto	l2852
+   631  0076  30D0               	movlw	208
+   632  0077  00A6               	movwf	_door+6	;volatile
+   633  0078  308A               	movlw	138
+   634  0079  00A7               	movwf	_door+7	;volatile
+   635  007A  14FD               	bsf	_flagtimer2/(0+8),_flagtimer2& (0+7)
+   636  007B                     l2852:	
+   637                           
+   638                           ;AV12F683.c: 127: if(door.tmrClose==0){togel=4;}
+   639  007B  0827               	movf	_door+7,w	;volatile
+   640  007C  0426               	iorwf	_door+6,w	;volatile
+   641  007D  1D03               	skipz
+   642  007E  2881               	goto	l424
+   643  007F  3004               	movlw	4
+   644  0080  00B8               	movwf	_togel
+   645  0081                     l424:	
+   646                           
+   647                           ;AV12F683.c: 128: if(key.power==1)togel=4;
+   648  0081  0B2A               	decfsz	_key+2,w
+   649  0082  2885               	goto	l425
+   650  0083  3004               	movlw	4
+   651  0084  00B8               	movwf	_togel
+   652  0085                     l425:	
+   653                           
+   654                           ;AV12F683.c: 129: if(alarm==1){togel=4;}
+   655  0085  0B31               	decfsz	_alarm,w
+   656  0086  2889               	goto	l2860
+   657  0087  3004               	movlw	4
+   658  0088  00B8               	movwf	_togel
+   659  0089                     l2860:	
+   660                           
+   661                           ;AV12F683.c: 130: if(door.status==0){flagtimer1=0;togel=1;} break;
+   662  0089  08A1               	movf	_door+1,f
+   663  008A  1D03               	skipz
+   664  008B  0008               	return
+   665  008C  107D               	bcf	_flagtimer1/(0+8),_flagtimer1& (0+7)
+   666  008D  01B8               	clrf	_togel
+   667  008E  0AB8               	incf	_togel,f
+   668  008F  0008               	return
+   669  0090                     l428:	
+   670                           ;AV12F683.c: 132: case 4 :
+   671                           
+   672                           
+   673                           ;AV12F683.c: 133: flagtimer1=0;
+   674  0090  107D               	bcf	_flagtimer1/(0+8),_flagtimer1& (0+7)
+   675                           
+   676                           ;AV12F683.c: 134: flagtimer2=0;
+   677  0091  10FD               	bcf	_flagtimer2/(0+8),_flagtimer2& (0+7)
+   678                           
+   679                           ;AV12F683.c: 135: blankingled1();
+   680  0092  21B7               	fcall	_blankingled1
+   681                           
+   682                           ;AV12F683.c: 137: if(alarm==0 && flagalarm==1 ){flagalarm=0;togel=1;}
+   683  0093  08B1               	movf	_alarm,f
+   684  0094  1D03               	skipz
+   685  0095  289B               	goto	l2874
+   686  0096  0B34               	decfsz	_flagalarm,w
+   687  0097  289B               	goto	l2874
+   688  0098  01B4               	clrf	_flagalarm
+   689  0099  01B8               	clrf	_togel
+   690  009A  0AB8               	incf	_togel,f
+   691  009B                     l2874:	
+   692                           
+   693                           ;AV12F683.c: 138: if(door.status==0 && door.flag ==0 && alarm==0 ){togel=1;}
+   694  009B  08A1               	movf	_door+1,f
+   695  009C  1D03               	skipz
+   696  009D  28A6               	goto	l2882
+   697  009E  08A0               	movf	_door,f
+   698  009F  1D03               	skipz
+   699  00A0  28A6               	goto	l2882
+   700  00A1  08B1               	movf	_alarm,f
+   701  00A2  1D03               	skipz
+   702  00A3  28A6               	goto	l2882
+   703  00A4  01B8               	clrf	_togel
+   704  00A5  0AB8               	incf	_togel,f
+   705  00A6                     l2882:	
+   706                           
+   707                           ;AV12F683.c: 139: if(pwmduty1==0 ){flagtimer3=0;togel=0;} break;
+   708  00A6  082C               	movf	_pwmduty1+1,w
+   709  00A7  042B               	iorwf	_pwmduty1,w
+   710  00A8  1D03               	skipz
+   711  00A9  0008               	return
+   712  00AA  117D               	bcf	_flagtimer3/(0+8),_flagtimer3& (0+7)
+   713  00AB  01B8               	clrf	_togel
+   714  00AC  0008               	return
+   715  00AD                     l2890:	
+   716  00AD  0838               	movf	_togel,w
+   717                           
+   718                           ; Switch size 1, requested type "space"
+   719                           ; Number of cases is 5, Range of values is 0 to 4
+   720                           ; switch strategies available:
+   721                           ; Name         Bytes Cycles
+   722                           ; simple_byte    16     9 (average)
+   723                           ; direct_byte    18    13 (fixed)
+   724                           ;	Chosen strategy is simple_byte
+   725  00AE  3A00               	xorlw	0	; case 0
+   726  00AF  1903               	skipnz
+   727  00B0  281B               	goto	l2788
+   728  00B1  3A01               	xorlw	1	; case 1
+   729  00B2  1903               	skipnz
+   730  00B3  283C               	goto	l2816
+   731  00B4  3A03               	xorlw	3	; case 2
+   732  00B5  1903               	skipnz
+   733  00B6  2850               	goto	l2828
+   734  00B7  3A01               	xorlw	1	; case 3
+   735  00B8  1903               	skipnz
+   736  00B9  2874               	goto	l422
+   737  00BA  3A07               	xorlw	7	; case 4
+   738  00BB  1D03               	btfss	3,2
+   739  00BC  0008               	return
+   740  00BD  2890               	goto	l428
+   741  00BE                     __end_of_mainled1:	
+   742                           
+   743                           	psect	text253
+   744  01B7                     __ptext253:	
+   745 ;; =============== function _mainled1 ends ============
+   746                           
+   747                           
+   748 ;; *************** function _blankingled1 *****************
+   749 ;; Defined at:
+   750 ;;		line 82 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\AV12F683.c"
+   751 ;; Parameters:    Size  Location     Type
+   752 ;;		None
+   753 ;; Auto vars:     Size  Location     Type
+   754 ;;		None
+   755 ;; Return value:  Size  Location     Type
+   756 ;;		None               void
+   757 ;; Registers used:
+   758 ;;		wreg, status,2, status,0, pclath, cstack
+   759 ;; Tracked objects:
+   760 ;;		On entry : 17F/0
+   761 ;;		On exit  : 17F/0
+   762 ;;		Unchanged: FFE80/0
+   763 ;; Data sizes:     COMMON   BANK0   BANK1
+   764 ;;      Params:         0       0       0
+   765 ;;      Locals:         0       0       0
+   766 ;;      Temps:          0       0       0
+   767 ;;      Totals:         0       0       0
+   768 ;;Total ram usage:        0 bytes
+   769 ;; Hardware stack levels used:    1
+   770 ;; Hardware stack levels required when called:    3
+   771 ;; This function calls:
+   772 ;;		___lbmod
+   773 ;; This function is called by:
+   774 ;;		_mainled1
+   775 ;; This function uses a non-reentrant model
+   776 ;;
+   777  01B7                     _blankingled1:	
+   778                           
+   779                           ;AV12F683.c: 84: if (pwmduty1 !=0){
+   780                           
+   781                           ; Regs used in _blankingled1: [wreg+status,2+status,0+pclath+cstack]
+   782  01B7  082C               	movf	_pwmduty1+1,w
+   783  01B8  042B               	iorwf	_pwmduty1,w
+   784  01B9  1903               	skipnz
+   785  01BA  0008               	return
+   786                           
+   787                           ;AV12F683.c: 85: if(key.power==0){
+   788  01BB  08AA               	movf	_key+2,f
+   789  01BC  1D03               	skipz
+   790  01BD  29CC               	goto	l2770
+   791                           
+   792                           ;AV12F683.c: 86: if ((tic % 20) ==0)pwmduty1--;
+   793  01BE  3014               	movlw	20
+   794  01BF                     L1:	
+   795  01BF  00B9               	movwf	?___lbmod
+   796  01C0  0837               	movf	_tic,w	;volatile
+   797  01C1  219B               	fcall	___lbmod
+   798  01C2  3800               	iorlw	0
+   799  01C3  1D03               	skipz
+   800  01C4  0008               	return
+   801  01C5  3001               	movlw	1
+   802  01C6  02AB               	subwf	_pwmduty1,f
+   803  01C7  3000               	movlw	0
+   804  01C8  1C03               	skipc
+   805  01C9  03AC               	decf	_pwmduty1+1,f
+   806  01CA  02AC               	subwf	_pwmduty1+1,f
+   807  01CB  0008               	return
+   808  01CC                     l2770:	
+   809                           
+   810                           ;AV12F683.c: 88: else{
+   811                           ;AV12F683.c: 89: if((tic % 5) ==0)pwmduty1--;
+   812  01CC  3005               	movlw	5
+   813  01CD  29BF               	goto	L1
+   814  01CE                     __end_of_blankingled1:	
+   815                           
+   816                           	psect	text254
+   817  01E5                     __ptext254:	
+   818 ;; =============== function _blankingled1 ends ============
+   819                           
+   820                           
+   821 ;; *************** function _lightingled1 *****************
+   822 ;; Defined at:
+   823 ;;		line 73 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\AV12F683.c"
+   824 ;; Parameters:    Size  Location     Type
+   825 ;;		None
+   826 ;; Auto vars:     Size  Location     Type
+   827 ;;		None
+   828 ;; Return value:  Size  Location     Type
+   829 ;;		None               void
+   830 ;; Registers used:
+   831 ;;		wreg, status,2, status,0, pclath, cstack
+   832 ;; Tracked objects:
+   833 ;;		On entry : 17F/0
+   834 ;;		On exit  : 17F/0
+   835 ;;		Unchanged: FFE80/0
+   836 ;; Data sizes:     COMMON   BANK0   BANK1
+   837 ;;      Params:         0       0       0
+   838 ;;      Locals:         0       0       0
+   839 ;;      Temps:          0       0       0
+   840 ;;      Totals:         0       0       0
+   841 ;;Total ram usage:        0 bytes
+   842 ;; Hardware stack levels used:    1
+   843 ;; Hardware stack levels required when called:    3
+   844 ;; This function calls:
+   845 ;;		___lbmod
+   846 ;; This function is called by:
+   847 ;;		_mainled1
+   848 ;; This function uses a non-reentrant model
+   849 ;;
+   850  01E5                     _lightingled1:	
+   851                           
+   852                           ;AV12F683.c: 75: if (pwmduty1 < pwmMax){
+   853                           
+   854                           ; Regs used in _lightingled1: [wreg+status,2+status,0+pclath+cstack]
+   855  01E5  3003               	movlw	3
+   856  01E6  022C               	subwf	_pwmduty1+1,w
+   857  01E7  30FF               	movlw	255
+   858  01E8  1903               	skipnz
+   859  01E9  022B               	subwf	_pwmduty1,w
+   860  01EA  1803               	skipnc
+   861  01EB  0008               	return
+   862                           
+   863                           ;AV12F683.c: 76: if( (tic % 10) ==0){
+   864  01EC  300A               	movlw	10
+   865  01ED  00B9               	movwf	?___lbmod
+   866  01EE  0837               	movf	_tic,w	;volatile
+   867  01EF  219B               	fcall	___lbmod
+   868  01F0  3800               	iorlw	0
+   869  01F1  1D03               	skipz
+   870  01F2  0008               	return
+   871                           
+   872                           ;AV12F683.c: 77: pwmduty1++;
+   873  01F3  0AAB               	incf	_pwmduty1,f
+   874  01F4  1903               	skipnz
+   875  01F5  0AAC               	incf	_pwmduty1+1,f
+   876  01F6  0008               	return
+   877  01F7                     __end_of_lightingled1:	
+   878                           
+   879                           	psect	text255
+   880  019B                     __ptext255:	
+   881 ;; =============== function _lightingled1 ends ============
+   882                           
+   883                           
+   884 ;; *************** function ___lbmod *****************
+   885 ;; Defined at:
+   886 ;;		line 5 in file "C:\Program Files (x86)\HI-TECH Software\PICC\9.71a\sources\lbmod.c"
+   887 ;; Parameters:    Size  Location     Type
+   888 ;;  dividend        1    wreg     unsigned char 
+   889 ;;  divisor         1    0[BANK0 ] unsigned char 
+   890 ;; Auto vars:     Size  Location     Type
+   891 ;;  dividend        1    2[BANK0 ] unsigned char 
+   892 ;;  rem             1    4[BANK0 ] unsigned char 
+   893 ;;  counter         1    3[BANK0 ] unsigned char 
+   894 ;; Return value:  Size  Location     Type
+   895 ;;                  1    wreg      unsigned char 
+   896 ;; Registers used:
+   897 ;;		wreg, status,2, status,0
+   898 ;; Tracked objects:
+   899 ;;		On entry : 17F/0
+   900 ;;		On exit  : 17F/0
+   901 ;;		Unchanged: FFE80/0
+   902 ;; Data sizes:     COMMON   BANK0   BANK1
+   903 ;;      Params:         0       1       0
+   904 ;;      Locals:         0       3       0
+   905 ;;      Temps:          0       1       0
+   906 ;;      Totals:         0       5       0
+   907 ;;Total ram usage:        5 bytes
+   908 ;; Hardware stack levels used:    1
+   909 ;; Hardware stack levels required when called:    2
+   910 ;; This function calls:
+   911 ;;		Nothing
+   912 ;; This function is called by:
+   913 ;;		_lightingled1
+   914 ;;		_blankingled1
+   915 ;; This function uses a non-reentrant model
+   916 ;;
+   917  019B                     ___lbmod:	
+   918                           
+   919                           ; Regs used in ___lbmod: [wreg+status,2+status,0]
+   920                           ;___lbmod@dividend stored from wreg
+   921  019B  00BB               	movwf	___lbmod@dividend
+   922  019C  3008               	movlw	8
+   923  019D  00BC               	movwf	___lbmod@counter
+   924  019E  01BD               	clrf	___lbmod@rem
+   925  019F                     l2540:	
+   926  019F  083B               	movf	___lbmod@dividend,w
+   927  01A0  00BA               	movwf	??___lbmod
+   928  01A1  3007               	movlw	7
+   929  01A2  1003               	clrc
+   930  01A3                     L2:	
+   931  01A3  0CBA               	rrf	??___lbmod,f
+   932  01A4  3EFF               	addlw	-1
+   933  01A5  1003               	clrc
+   934  01A6  1D03               	skipz
+   935  01A7  29A3               	goto	L2
+   936  01A8  0D3D               	rlf	___lbmod@rem,w
+   937  01A9  043A               	iorwf	??___lbmod,w
+   938  01AA  00BD               	movwf	___lbmod@rem
+   939  01AB  1003               	clrc
+   940  01AC  0DBB               	rlf	___lbmod@dividend,f
+   941  01AD  0839               	movf	___lbmod@divisor,w
+   942  01AE  023D               	subwf	___lbmod@rem,w
+   943  01AF  1C03               	skipc
+   944  01B0  29B3               	goto	l2548
+   945  01B1  0839               	movf	___lbmod@divisor,w
+   946  01B2  02BD               	subwf	___lbmod@rem,f
+   947  01B3                     l2548:	
+   948  01B3  0BBC               	decfsz	___lbmod@counter,f
+   949  01B4  299F               	goto	l2540
+   950  01B5  083D               	movf	___lbmod@rem,w
+   951  01B6  0008               	return
+   952  01B7                     __end_of___lbmod:	
+   953                           
+   954                           	psect	text256
+   955  0172                     __ptext256:	
+   956 ;; =============== function ___lbmod ends ============
+   957                           
+   958                           
+   959 ;; *************** function _fnPodgot *****************
+   960 ;; Defined at:
+   961 ;;		line 9 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\podgot12f683.c"
+   962 ;; Parameters:    Size  Location     Type
+   963 ;;		None
+   964 ;; Auto vars:     Size  Location     Type
+   965 ;;		None
+   966 ;; Return value:  Size  Location     Type
+   967 ;;		None               void
+   968 ;; Registers used:
+   969 ;;		wreg, status,2
+   970 ;; Tracked objects:
+   971 ;;		On entry : 17F/0
+   972 ;;		On exit  : 17F/20
+   973 ;;		Unchanged: FFE80/0
+   974 ;; Data sizes:     COMMON   BANK0   BANK1
+   975 ;;      Params:         0       0       0
+   976 ;;      Locals:         0       0       0
+   977 ;;      Temps:          0       0       0
+   978 ;;      Totals:         0       0       0
+   979 ;;Total ram usage:        0 bytes
+   980 ;; Hardware stack levels used:    1
+   981 ;; Hardware stack levels required when called:    2
+   982 ;; This function calls:
+   983 ;;		Nothing
+   984 ;; This function is called by:
+   985 ;;		_main
+   986 ;; This function uses a non-reentrant model
+   987 ;;
+   988  0172                     _fnPodgot:	
+   989                           
+   990                           ;podgot12f683.c: 10: TRISIO=0b111001;
+   991                           
+   992                           ; Regs used in _fnPodgot: [wreg+status,2]
+   993  0172  3039               	movlw	57
+   994  0173  1683               	bsf	3,5	;RP0=1, select bank1
+   995  0174  0085               	movwf	5	;volatile
+   996                           
+   997                           ;podgot12f683.c: 11: GPIO=0b000000;
+   998  0175  1283               	bcf	3,5	;RP0=0, select bank0
+   999  0176  0185               	clrf	5	;volatile
+  1000                           
+  1001                           ;podgot12f683.c: 12: IOC=0b00111001;
+  1002  0177  1683               	bsf	3,5	;RP0=1, select bank1
+  1003  0178  0096               	movwf	22	;volatile
+  1004                           
+  1005                           ;podgot12f683.c: 13: CMCON0=0b00000111;
+  1006  0179  3007               	movlw	7
+  1007  017A  1283               	bcf	3,5	;RP0=0, select bank0
+  1008  017B  0099               	movwf	25	;volatile
+  1009                           
+  1010                           ;podgot12f683.c: 14: ADCON0=0b00000000;
+  1011  017C  019F               	clrf	31	;volatile
+  1012                           
+  1013                           ;podgot12f683.c: 15: ANSEL=0b000000;
+  1014  017D  1683               	bsf	3,5	;RP0=1, select bank1
+  1015  017E  019F               	clrf	31	;volatile
+  1016                           
+  1017                           ;podgot12f683.c: 16: WPU=0b100001;
+  1018  017F  3021               	movlw	33
+  1019  0180  0095               	movwf	21	;volatile
+  1020                           
+  1021                           ;podgot12f683.c: 17: INTCON=0b11000000;
+  1022  0181  30C0               	movlw	192
+  1023  0182  008B               	movwf	11	;volatile
+  1024                           
+  1025                           ;podgot12f683.c: 18: PIE1=0b00000001;
+  1026  0183  3001               	movlw	1
+  1027  0184  008C               	movwf	12	;volatile
+  1028                           
+  1029                           ;podgot12f683.c: 19: OPTION=0b00000111;
+  1030  0185  3007               	movlw	7
+  1031  0186  0081               	movwf	1	;volatile
+  1032                           
+  1033                           ;podgot12f683.c: 21: T1CON=0b00000001;
+  1034  0187  3001               	movlw	1
+  1035  0188  1283               	bcf	3,5	;RP0=0, select bank0
+  1036  0189  0090               	movwf	16	;volatile
+  1037                           
+  1038                           ;podgot12f683.c: 22: T2CON=0b00000100;
+  1039  018A  3004               	movlw	4
+  1040  018B  0092               	movwf	18	;volatile
+  1041                           
+  1042                           ;podgot12f683.c: 24: TMR1H =0b11111011;
+  1043  018C  30FB               	movlw	251
+  1044  018D  008F               	movwf	15	;volatile
+  1045                           
+  1046                           ;podgot12f683.c: 25: TMR1L =0b00011101;
+  1047  018E  301D               	movlw	29
+  1048  018F  008E               	movwf	14	;volatile
+  1049                           
+  1050                           ;podgot12f683.c: 27: CCP1CON = 0b00001100;
+  1051  0190  300C               	movlw	12
+  1052  0191  0095               	movwf	21	;volatile
+  1053                           
+  1054                           ;podgot12f683.c: 28: PR2 = 0xff;
+  1055  0192  30FF               	movlw	255
+  1056  0193  1683               	bsf	3,5	;RP0=1, select bank1
+  1057  0194  0092               	movwf	18	;volatile
+  1058                           
+  1059                           ;podgot12f683.c: 30: CCPR1L=0b00000000;
+  1060  0195  1283               	bcf	3,5	;RP0=0, select bank0
+  1061  0196  0193               	clrf	19	;volatile
+  1062                           
+  1063                           ;podgot12f683.c: 33: OSCCON = 0b01110000;
+  1064  0197  3070               	movlw	112
+  1065  0198  1683               	bsf	3,5	;RP0=1, select bank1
+  1066  0199  008F               	movwf	15	;volatile
+  1067  019A  0008               	return
+  1068  019B                     __end_of_fnPodgot:	
+  1069                           
+  1070                           	psect	text257
+  1071  0208                     __ptext257:	
+  1072 ;; =============== function _fnPodgot ends ============
+  1073                           
+  1074                           
+  1075 ;; *************** function _gotosleep *****************
+  1076 ;; Defined at:
+  1077 ;;		line 54 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\AV12F683.c"
+  1078 ;; Parameters:    Size  Location     Type
+  1079 ;;		None
+  1080 ;; Auto vars:     Size  Location     Type
+  1081 ;;		None
+  1082 ;; Return value:  Size  Location     Type
+  1083 ;;		None               void
+  1084 ;; Registers used:
+  1085 ;;		wreg, status,2, status,0
+  1086 ;; Tracked objects:
+  1087 ;;		On entry : 17F/0
+  1088 ;;		On exit  : 17F/0
+  1089 ;;		Unchanged: FFE80/0
+  1090 ;; Data sizes:     COMMON   BANK0   BANK1
+  1091 ;;      Params:         0       0       0
+  1092 ;;      Locals:         0       0       0
+  1093 ;;      Temps:          0       0       0
+  1094 ;;      Totals:         0       0       0
+  1095 ;;Total ram usage:        0 bytes
+  1096 ;; Hardware stack levels used:    1
+  1097 ;; Hardware stack levels required when called:    2
+  1098 ;; This function calls:
+  1099 ;;		Nothing
+  1100 ;; This function is called by:
+  1101 ;;		_main
+  1102 ;; This function uses a non-reentrant model
+  1103 ;;
+  1104  0208                     _gotosleep:	
+  1105                           
+  1106                           ;AV12F683.c: 57: if(flagtimer3==0){
+  1107                           
+  1108                           ; Regs used in _gotosleep: [wreg+status,2+status,0]
+  1109  0208  197D               	btfsc	_flagtimer3/(0+8),_flagtimer3& (0+7)
+  1110  0209  2A0F               	goto	l2714
+  1111                           
+  1112                           ;AV12F683.c: 58: tmrSleep = -5000 ;
+  1113  020A  3078               	movlw	120
+  1114  020B  00F7               	movwf	_tmrSleep	;volatile
+  1115  020C  30EC               	movlw	236
+  1116  020D  00F8               	movwf	_tmrSleep+1	;volatile
+  1117                           
+  1118                           ;AV12F683.c: 59: flagtimer3=1;
+  1119  020E  157D               	bsf	_flagtimer3/(0+8),_flagtimer3& (0+7)
+  1120  020F                     l2714:	
+  1121                           
+  1122                           ;AV12F683.c: 60: }
+  1123                           ;AV12F683.c: 62: if(tmrSleep == 0){
+  1124  020F  0878               	movf	_tmrSleep+1,w	;volatile
+  1125  0210  0477               	iorwf	_tmrSleep,w	;volatile
+  1126  0211  1D03               	skipz
+  1127  0212  0008               	return
+  1128                           
+  1129                           ;AV12F683.c: 63: GPIE =1;
+  1130  0213  158B               	bsf	11,3
+  1131                           
+  1132                           ;AV12F683.c: 64: GPIO1=0;
+  1133  0214  1085               	bcf	5,1
+  1134                           
+  1135                           ;AV12F683.c: 65: CCP1CON=0b00000000;
+  1136  0215  0195               	clrf	21	;volatile
+  1137  0216  0063               	sleep	;#
+  1138  0217  0008               	return
+  1139  0218                     __end_of_gotosleep:	
+  1140                           
+  1141                           	psect	text258
+  1142  012B                     __ptext258:	
+  1143 ;; =============== function _gotosleep ends ============
+  1144                           
+  1145                           
+  1146 ;; *************** function _tmr0 *****************
+  1147 ;; Defined at:
+  1148 ;;		line 204 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\AV12F683.c"
+  1149 ;; Parameters:    Size  Location     Type
+  1150 ;;		None
+  1151 ;; Auto vars:     Size  Location     Type
+  1152 ;;		None
+  1153 ;; Return value:  Size  Location     Type
+  1154 ;;		None               void
+  1155 ;; Registers used:
+  1156 ;;		wreg, fsr0l, fsr0h, status,2, status,0, pclath, cstack
+  1157 ;; Tracked objects:
+  1158 ;;		On entry : 0/0
+  1159 ;;		On exit  : 0/0
+  1160 ;;		Unchanged: FFEDF/0
+  1161 ;; Data sizes:     COMMON   BANK0   BANK1
+  1162 ;;      Params:         0       0       0
+  1163 ;;      Locals:         0       0       0
+  1164 ;;      Temps:          3       0       0
+  1165 ;;      Totals:         3       0       0
+  1166 ;;Total ram usage:        3 bytes
+  1167 ;; Hardware stack levels used:    1
+  1168 ;; Hardware stack levels required when called:    1
+  1169 ;; This function calls:
+  1170 ;;		_fnInputpins
+  1171 ;;		_fnPwm1
+  1172 ;; This function is called by:
+  1173 ;;		Interrupt level 1
+  1174 ;; This function uses a non-reentrant model
+  1175 ;;
+  1176  012B                     _tmr0:	
+  1177                           
+  1178                           ;AV12F683.c: 206: if( GPIF ){
+  1179  012B  1C0B               	btfss	11,0
+  1180  012C  2933               	goto	i1l2370
+  1181                           
+  1182                           ;AV12F683.c: 207: GPIO & 0b11111111;
+  1183  012D  1283               	bcf	3,5	;RP0=0, select bank0
+  1184                           
+  1185                           ;AV12F683.c: 208: GPIF=0;
+  1186  012E  100B               	bcf	11,0
+  1187                           
+  1188                           ;AV12F683.c: 209: GPIE=0;
+  1189  012F  118B               	bcf	11,3
+  1190                           
+  1191                           ;AV12F683.c: 210: flagtimer3=0;
+  1192  0130  117D               	bcf	_flagtimer3/(0+8),_flagtimer3& (0+7)
+  1193                           
+  1194                           ;AV12F683.c: 211: CCP1CON = 0b00001100;
+  1195  0131  300C               	movlw	12
+  1196  0132  0095               	movwf	21	;volatile
+  1197  0133                     i1l2370:	
+  1198                           
+  1199                           ;AV12F683.c: 213: }
+  1200                           ;AV12F683.c: 217: if (T0IF && T0IE) {
+  1201  0133  190B               	btfsc	11,2
+  1202  0134  1E8B               	btfss	11,5
+  1203  0135  2938               	goto	i1l437
+  1204                           
+  1205                           ;AV12F683.c: 218: T0IF = 0;
+  1206  0136  110B               	bcf	11,2
+  1207  0137  0064               	clrwdt	;#
+  1208  0138                     i1l437:	
+  1209                           
+  1210                           ;AV12F683.c: 222: }
+  1211                           ;AV12F683.c: 226: if(TMR1IF && TMR1IE) {
+  1212  0138  1283               	bcf	3,5	;RP0=0, select bank0
+  1213  0139  1C0C               	btfss	12,0
+  1214  013A  2969               	goto	i1l443
+  1215  013B  1683               	bsf	3,5	;RP0=1, select bank1
+  1216  013C  1C0C               	btfss	12,0
+  1217  013D  2969               	goto	i1l443
+  1218                           
+  1219                           ;AV12F683.c: 227: TMR1IF=0;
+  1220  013E  1283               	bcf	3,5	;RP0=0, select bank0
+  1221  013F  100C               	bcf	12,0
+  1222                           
+  1223                           ;AV12F683.c: 228: TMR1H = (65536 - (8000000 /4/1000)) >> 8 ;
+  1224  0140  30F8               	movlw	248
+  1225  0141  008F               	movwf	15	;volatile
+  1226                           
+  1227                           ;AV12F683.c: 229: TMR1L = (65536 - (8000000 /4/1000)) & 0x00ff;
+  1228  0142  3030               	movlw	48
+  1229  0143  008E               	movwf	14	;volatile
+  1230  0144  0064               	clrwdt	;#
+  1231                           
+  1232                           ;AV12F683.c: 233: if(++tic==255) {
+  1233  0145  0AB7               	incf	_tic,f	;volatile
+  1234  0146  0837               	movf	_tic,w	;volatile
+  1235  0147  3AFF               	xorlw	255
+  1236  0148  1903               	btfsc	3,2
+  1237                           
+  1238                           ;AV12F683.c: 234: tic=0;
+  1239  0149  01B7               	clrf	_tic	;volatile
+  1240  014A  0064               	clrwdt	;#
+  1241                           
+  1242                           ;AV12F683.c: 240: if(door.tmrOpen <0){door.tmrOpen++;}
+  1243  014B  1FA5               	btfss	_door+5,7	;volatile
+  1244  014C  2954               	goto	i1l2394
+  1245  014D  0AA2               	incf	_door+2,f	;volatile
+  1246  014E  1903               	skipnz
+  1247  014F  0AA3               	incf	_door+3,f	;volatile
+  1248  0150  1903               	skipnz
+  1249  0151  0AA4               	incf	_door+4,f	;volatile
+  1250  0152  1903               	skipnz
+  1251  0153  0AA5               	incf	_door+5,f	;volatile
+  1252  0154                     i1l2394:	
+  1253                           
+  1254                           ;AV12F683.c: 241: if(door.tmrClose<0){ door.tmrClose++;}
+  1255  0154  3006               	movlw	6
+  1256  0155  3E20               	addlw	_door& (0+255)
+  1257  0156  0084               	movwf	4
+  1258  0157  0A84               	incf	4,f
+  1259  0158  1383               	bcf	3,7	;select IRP bank0
+  1260  0159  1F80               	btfss	0,7
+  1261  015A  295E               	goto	i1l2398
+  1262  015B  0AA6               	incf	_door+6,f	;volatile
+  1263  015C  1903               	skipnz
+  1264  015D  0AA7               	incf	_door+7,f	;volatile
+  1265  015E                     i1l2398:	
+  1266                           
+  1267                           ;AV12F683.c: 242: if(tmrSleep < 0){ tmrSleep++ ;}
+  1268  015E  1FF8               	btfss	_tmrSleep+1,7	;volatile
+  1269  015F  2963               	goto	i1l2402
+  1270  0160  0AF7               	incf	_tmrSleep,f	;volatile
+  1271  0161  1903               	skipnz
+  1272  0162  0AF8               	incf	_tmrSleep+1,f	;volatile
+  1273  0163                     i1l2402:	
+  1274                           
+  1275                           ;AV12F683.c: 244: fnInputpins();
+  1276  0163  20BE               	fcall	_fnInputpins
+  1277                           
+  1278                           ;AV12F683.c: 245: fnPwm1(pwmduty1);
+  1279  0164  082C               	movf	_pwmduty1+1,w
+  1280  0165  00F1               	movwf	?_fnPwm1+1
+  1281  0166  082B               	movf	_pwmduty1,w
+  1282  0167  00F0               	movwf	?_fnPwm1
+  1283  0168  21CE               	fcall	_fnPwm1
+  1284  0169                     i1l443:	
+  1285  0169  0876               	movf	??_tmr0+2,w
+  1286  016A  008A               	movwf	10
+  1287  016B  0875               	movf	??_tmr0+1,w
+  1288  016C  0084               	movwf	4
+  1289  016D  0874               	movf	??_tmr0,w
+  1290  016E  0083               	movwf	3
+  1291  016F  0EFE               	swapf	126,f
+  1292  0170  0E7E               	swapf	126,w
+  1293  0171  0009               	retfie
+  1294  0172                     __end_of_tmr0:	
+  1295                           
+  1296                           	psect	intentry
+  1297  0004                     __pintentry:	
+  1298                           ; Regs used in _tmr0: [wreg-fsr0h+status,2+status,0+pclath+cstack]
+  1299                           
+  1300  0004                     interrupt_function:	
+  1301  007E                     saved_w	set	btemp
+  1302  0004  00FE               	movwf	btemp
+  1303  0005  0803               	movf	3,w
+  1304  0006  00F4               	movwf	??_tmr0
+  1305  0007  0804               	movf	4,w
+  1306  0008  00F5               	movwf	??_tmr0+1
+  1307  0009  080A               	movf	10,w
+  1308  000A  00F6               	movwf	??_tmr0+2
+  1309  000B  292B               	ljmp	_tmr0
+  1310                           
+  1311                           	psect	text259
+  1312  01CE                     __ptext259:	
+  1313 ;; =============== function _tmr0 ends ============
+  1314                           
+  1315                           
+  1316 ;; *************** function _fnPwm1 *****************
+  1317 ;; Defined at:
+  1318 ;;		line 12 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\pwm1.c"
+  1319 ;; Parameters:    Size  Location     Type
+  1320 ;;  n               2    0[COMMON] unsigned int 
+  1321 ;; Auto vars:     Size  Location     Type
+  1322 ;;		None
+  1323 ;; Return value:  Size  Location     Type
+  1324 ;;		None               void
+  1325 ;; Registers used:
+  1326 ;;		wreg, status,2, status,0
+  1327 ;; Tracked objects:
+  1328 ;;		On entry : 120/0
+  1329 ;;		On exit  : 120/0
+  1330 ;;		Unchanged: FFEDF/0
+  1331 ;; Data sizes:     COMMON   BANK0   BANK1
+  1332 ;;      Params:         2       0       0
+  1333 ;;      Locals:         0       0       0
+  1334 ;;      Temps:          2       0       0
+  1335 ;;      Totals:         4       0       0
+  1336 ;;Total ram usage:        4 bytes
+  1337 ;; Hardware stack levels used:    1
+  1338 ;; This function calls:
+  1339 ;;		Nothing
+  1340 ;; This function is called by:
+  1341 ;;		_tmr0
+  1342 ;; This function uses a non-reentrant model
+  1343 ;;
+  1344  01CE                     _fnPwm1:	
+  1345                           
+  1346                           ;pwm1.c: 15: CCP1CON &= ~(1<<4);
+  1347                           
+  1348                           ; Regs used in _fnPwm1: [wreg+status,2+status,0]
+  1349  01CE  1215               	bcf	21,4	;volatile
+  1350                           
+  1351                           ;pwm1.c: 16: if ((n) & 1)
+  1352  01CF  1870               	btfsc	fnPwm1@n,0
+  1353                           
+  1354                           ;pwm1.c: 17: CCP1CON |= 1<<4;
+  1355  01D0  1615               	bsf	21,4	;volatile
+  1356                           
+  1357                           ;pwm1.c: 18: CCP1CON &= ~(1<<5);
+  1358  01D1  1295               	bcf	21,5	;volatile
+  1359                           
+  1360                           ;pwm1.c: 19: if ((n) & 2)
+  1361  01D2  18F0               	btfsc	fnPwm1@n,1
+  1362                           
+  1363                           ;pwm1.c: 20: CCP1CON |= 1<<5;
+  1364  01D3  1695               	bsf	21,5	;volatile
+  1365                           
+  1366                           ;pwm1.c: 21: CCPR1L=((n)>>2);
+  1367  01D4  0871               	movf	fnPwm1@n+1,w
+  1368  01D5  21D9               	fcall	PL2	;call to abstracted procedure
+  1369                           
+  1370                           ;pwm1.c: 23: CCPR1L=((n)>>2);
+  1371  01D6  0871               	movf	fnPwm1@n+1,w
+  1372  01D7  21D9               	fcall	PL2	;call to abstracted procedure
+  1373  01D8  0008               	return
+  1374  01D9                     __end_of_fnPwm1:	
+  1375  01D9                     PL2:	
+  1376  01D9  00F3               	movwf	??_fnPwm1+1
+  1377  01DA  0870               	movf	fnPwm1@n,w
+  1378  01DB  00F2               	movwf	??_fnPwm1
+  1379  01DC  1003               	clrc
+  1380  01DD  0CF3               	rrf	??_fnPwm1+1,f
+  1381  01DE  0CF2               	rrf	??_fnPwm1,f
+  1382  01DF  1003               	clrc
+  1383  01E0  0CF3               	rrf	??_fnPwm1+1,f
+  1384  01E1  0CF2               	rrf	??_fnPwm1,f
+  1385  01E2  0872               	movf	??_fnPwm1,w
+  1386  01E3  0093               	movwf	19	;volatile
+  1387  01E4  0008               	return
+  1388                           
+  1389                           	psect	text260
+  1390  00BE                     __ptext260:	
+  1391 ;; =============== function _fnPwm1 ends ============
+  1392                           
+  1393                           
+  1394 ;; *************** function _fnInputpins *****************
+  1395 ;; Defined at:
+  1396 ;;		line 46 in file "C:\Program Files (x86)\Microchip\Projects\AV12F683\inputPins.c"
+  1397 ;; Parameters:    Size  Location     Type
+  1398 ;;		None
+  1399 ;; Auto vars:     Size  Location     Type
+  1400 ;;		None
+  1401 ;; Return value:  Size  Location     Type
+  1402 ;;		None               void
+  1403 ;; Registers used:
+  1404 ;;		wreg, status,2, status,0
+  1405 ;; Tracked objects:
+  1406 ;;		On entry : 120/0
+  1407 ;;		On exit  : 120/0
+  1408 ;;		Unchanged: FFEDF/0
+  1409 ;; Data sizes:     COMMON   BANK0   BANK1
+  1410 ;;      Params:         0       0       0
+  1411 ;;      Locals:         0       0       0
+  1412 ;;      Temps:          0       0       0
+  1413 ;;      Totals:         0       0       0
+  1414 ;;Total ram usage:        0 bytes
+  1415 ;; Hardware stack levels used:    1
+  1416 ;; This function calls:
+  1417 ;;		Nothing
+  1418 ;; This function is called by:
+  1419 ;;		_tmr0
+  1420 ;; This function uses a non-reentrant model
+  1421 ;;
+  1422  00BE                     _fnInputpins:	
+  1423                           
+  1424                           ;inputPins.c: 48: if(GPIO0==doorOpen){
+  1425                           
+  1426                           ; Regs used in _fnInputpins: [wreg+status,2+status,0]
+  1427  00BE  3000               	movlw	0
+  1428  00BF  1805               	btfsc	5,0
+  1429  00C0  3001               	movlw	1
+  1430  00C1  0633               	xorwf	_doorOpen,w
+  1431  00C2  1D03               	skipz
+  1432  00C3  28CA               	goto	i1l2414
+  1433                           
+  1434                           ;inputPins.c: 49: adDoor++;
+  1435  00C4  0AFB               	incf	_adDoor,f
+  1436                           
+  1437                           ;inputPins.c: 50: if(adDoor>100){door.status=0;adDoor=0;}
+  1438  00C5  3065               	movlw	101
+  1439  00C6  027B               	subwf	_adDoor,w
+  1440  00C7  1C03               	skipc
+  1441  00C8  28CB               	goto	i1l2416
+  1442  00C9  01A1               	clrf	_door+1	;volatile
+  1443  00CA                     i1l2414:	
+  1444                           
+  1445                           ;inputPins.c: 52: else adDoor=0;
+  1446  00CA  01FB               	clrf	_adDoor
+  1447  00CB                     i1l2416:	
+  1448                           
+  1449                           ;inputPins.c: 54: if(GPIO0==doorClose){
+  1450  00CB  3000               	movlw	0
+  1451  00CC  1805               	btfsc	5,0
+  1452  00CD  3001               	movlw	1
+  1453  00CE  063F               	xorwf	_doorClose,w
+  1454  00CF  1D03               	skipz
+  1455  00D0  28D8               	goto	i1l2424
+  1456                           
+  1457                           ;inputPins.c: 55: adDoor2++;
+  1458  00D1  0AFC               	incf	_adDoor2,f
+  1459                           
+  1460                           ;inputPins.c: 56: if(adDoor2>100){door.status=1;adDoor2=0;}
+  1461  00D2  3065               	movlw	101
+  1462  00D3  027C               	subwf	_adDoor2,w
+  1463  00D4  1C03               	skipc
+  1464  00D5  28D9               	goto	i1l2428
+  1465  00D6  3001               	movlw	1
+  1466  00D7  00A1               	movwf	_door+1	;volatile
+  1467  00D8                     i1l2424:	
+  1468  00D8  01FC               	clrf	_adDoor2
+  1469  00D9                     i1l2428:	
+  1470                           
+  1471                           ;inputPins.c: 61: if(GPIO5 ==alarmOn){adAlarm++;
+  1472  00D9  3000               	movlw	0
+  1473  00DA  1A85               	btfsc	5,5
+  1474  00DB  3001               	movlw	1
+  1475  00DC  0632               	xorwf	_alarmOn,w
+  1476  00DD  1D03               	skipz
+  1477  00DE  28E6               	goto	i1l2436
+  1478  00DF  0AF9               	incf	_adAlarm,f
+  1479                           
+  1480                           ;inputPins.c: 62: if(adAlarm>100){alarm =1;adAlarm=0;}
+  1481  00E0  3065               	movlw	101
+  1482  00E1  0279               	subwf	_adAlarm,w
+  1483  00E2  1C03               	skipc
+  1484  00E3  28E7               	goto	i1l2440
+  1485  00E4  01B1               	clrf	_alarm
+  1486  00E5  0AB1               	incf	_alarm,f
+  1487  00E6                     i1l2436:	
+  1488  00E6  01F9               	clrf	_adAlarm
+  1489  00E7                     i1l2440:	
+  1490                           
+  1491                           ;inputPins.c: 66: if( GPIO5 ==alarmOff ){adAlarm2++;
+  1492  00E7  3000               	movlw	0
+  1493  00E8  1A85               	btfsc	5,5
+  1494  00E9  3001               	movlw	1
+  1495  00EA  063E               	xorwf	_alarmOff,w
+  1496  00EB  1D03               	skipz
+  1497  00EC  28F3               	goto	i1l2448
+  1498  00ED  0AFA               	incf	_adAlarm2,f
+  1499                           
+  1500                           ;inputPins.c: 67: if(adAlarm2>100){alarm = 0;adAlarm2=0;}
+  1501  00EE  3065               	movlw	101
+  1502  00EF  027A               	subwf	_adAlarm2,w
+  1503  00F0  1C03               	skipc
+  1504  00F1  28F4               	goto	i1l2450
+  1505  00F2  01B1               	clrf	_alarm
+  1506  00F3                     i1l2448:	
+  1507                           
+  1508                           ;inputPins.c: 69: else adAlarm2=0;
+  1509  00F3  01FA               	clrf	_adAlarm2
+  1510  00F4                     i1l2450:	
+  1511                           
+  1512                           ;inputPins.c: 72: if(GPIO4 ==keyPowerOff){adKeyPower++;
+  1513  00F4  3000               	movlw	0
+  1514  00F5  1A05               	btfsc	5,4
+  1515  00F6  3001               	movlw	1
+  1516  00F7  0636               	xorwf	_keyPowerOff,w
+  1517  00F8  1D03               	skipz
+  1518  00F9  2900               	goto	i1l2458
+  1519  00FA  0AAF               	incf	_adKeyPower,f
+  1520                           
+  1521                           ;inputPins.c: 73: if(adKeyPower>100){key.power =0;adKeyPower=0;}
+  1522  00FB  3065               	movlw	101
+  1523  00FC  022F               	subwf	_adKeyPower,w
+  1524  00FD  1C03               	skipc
+  1525  00FE  2901               	goto	i1l2460
+  1526  00FF  01AA               	clrf	_key+2
+  1527  0100                     i1l2458:	
+  1528                           
+  1529                           ;inputPins.c: 75: else adKeyPower=0;
+  1530  0100  01AF               	clrf	_adKeyPower
+  1531  0101                     i1l2460:	
+  1532                           
+  1533                           ;inputPins.c: 77: if( GPIO4 ==keyPowerOn ){adKeyPower2++;
+  1534  0101  3000               	movlw	0
+  1535  0102  1A05               	btfsc	5,4
+  1536  0103  3001               	movlw	1
+  1537  0104  0641               	xorwf	_keyPowerOn,w
+  1538  0105  1D03               	skipz
+  1539  0106  290E               	goto	i1l2468
+  1540  0107  0AB0               	incf	_adKeyPower2,f
+  1541                           
+  1542                           ;inputPins.c: 78: if(adKeyPower2>100){key.power = 1;adKeyPower2=0;}
+  1543  0108  3065               	movlw	101
+  1544  0109  0230               	subwf	_adKeyPower2,w
+  1545  010A  1C03               	skipc
+  1546  010B  290F               	goto	i1l2472
+  1547  010C  01AA               	clrf	_key+2
+  1548  010D  0AAA               	incf	_key+2,f
+  1549  010E                     i1l2468:	
+  1550  010E  01B0               	clrf	_adKeyPower2
+  1551  010F                     i1l2472:	
+  1552                           
+  1553                           ;inputPins.c: 83: if(GPIO3 ==keyInLockOff){adKeyInLock++;
+  1554  010F  3000               	movlw	0
+  1555  0110  1985               	btfsc	5,3
+  1556  0111  3001               	movlw	1
+  1557  0112  0635               	xorwf	_keyInLockOff,w
+  1558  0113  1D03               	skipz
+  1559  0114  291B               	goto	i1l2480
+  1560  0115  0AAD               	incf	_adKeyInLock,f
+  1561                           
+  1562                           ;inputPins.c: 84: if(adKeyInLock>100){key.in_lock =0;adKeyInLock=0;}
+  1563  0116  3065               	movlw	101
+  1564  0117  022D               	subwf	_adKeyInLock,w
+  1565  0118  1C03               	skipc
+  1566  0119  291C               	goto	i1l2482
+  1567  011A  01A9               	clrf	_key+1
+  1568  011B                     i1l2480:	
+  1569                           
+  1570                           ;inputPins.c: 86: else adKeyInLock=0;
+  1571  011B  01AD               	clrf	_adKeyInLock
+  1572  011C                     i1l2482:	
+  1573                           
+  1574                           ;inputPins.c: 88: if( GPIO3 ==keyInLockOn ){adKeyInLock2++;
+  1575  011C  3000               	movlw	0
+  1576  011D  1985               	btfsc	5,3
+  1577  011E  3001               	movlw	1
+  1578  011F  0640               	xorwf	_keyInLockOn,w
+  1579  0120  1D03               	skipz
+  1580  0121  2929               	goto	i1l2490
+  1581  0122  0AAE               	incf	_adKeyInLock2,f
+  1582                           
+  1583                           ;inputPins.c: 89: if(adKeyInLock2>100){key.in_lock = 1;adKeyInLock2=0;}
+  1584  0123  3065               	movlw	101
+  1585  0124  022E               	subwf	_adKeyInLock2,w
+  1586  0125  1C03               	skipc
+  1587  0126  0008               	return
+  1588  0127  01A9               	clrf	_key+1
+  1589  0128  0AA9               	incf	_key+1,f
+  1590  0129                     i1l2490:	
+  1591  0129  01AE               	clrf	_adKeyInLock2
+  1592  012A  0008               	return
+  1593  012B                     __end_of_fnInputpins:	
+  1594                           
+  1595                           	psect	text261
+  1596  0000                     __ptext261:	
+  1597 ;; =============== function _fnInputpins ends ============
+  1598                           
+  1599  007E                     btemp	set	126	;btemp
+  1600  007E                     wtemp0	set	126
+
+
+HI-TECH Software PICC Macro Assembler V9.71a build 6446 
+Symbol Table                                                                                   Thu Jun 05 23:56:32 2014
+
+                   fsr 0004                    l420 006F                    l413 0043                    l422 0074  
+                  l414 0047                    l424 0081                    l425 0085                    l419 0065  
+                  l428 0090                    _IOC 0096                    _PR2 0092                    _WPU 0095  
+                  _key 0028                    _tic 0037                    fsr0 0004                    indf 0000  
+                 l1627 0000                   l2540 019F                   l2550 0000                   l2542 0000  
+                 l2720 0000                   l2712 0000                   l2544 0000                   l2536 0000  
+                 l2800 0000                   l2714 020F                   l2730 0000                   l2722 0000  
+                 l2538 0000                   l2802 0000                   l1579 0000                   l2708 0000  
+                 l2740 0000                   l2732 0000                   l2724 0000                   l2548 01B3  
+                 l2820 0000                   l2804 002E                   l2900 0000                   l2718 0000  
+                 l2750 0000                   l2742 0000                   l2734 0000                   l2726 0000  
+                 l2830 0000                   l2822 0000                   l2814 0000                   l2752 0000  
+                 l2744 0000                   l2736 0000                   l2728 0000                   l2832 0000  
+                 l2824 0000                   l2816 003C                   l2808 0000                   l2754 0000  
+                 l2746 0000                   l2738 0000                   l2770 01CC                   l2762 0000  
+                 l2850 0000                   l2842 0000                   l2834 0000                   l2818 0000  
+                 l2748 0000                   l2756 0000                   l2860 0089                   l2852 007B  
+                 l2836 0056                   l2828 0050                   l2780 0013                   l2870 0000  
+                 l2846 0000                   l2782 0000                   l2774 0000                   l2872 0000  
+                 l2864 0000                   l2856 0000                   l2784 0016                   l2776 0000  
+                 l2882 00A6                   l2874 009B                   l2866 0000                   l2858 0000  
+                 l2786 0000                   l2890 00AD                   l2778 0000                   l2796 0026  
+                 l2788 001B                   l2892 0000                   l2886 0000                   l2894 0000  
+                 l2896 021C                   l2898 0000                   _T0IE 005D                   _T0IF 005A  
+                 _GPIE 005B                   _GPIF 0058                   _GPIO 0005                   _PIE1 008C  
+                 _door 0020                   _main 0218                   _tmr0 012B                   btemp 007E  
+                 start 000C   __end_of_blankingled1 01CE                  ?_main 0070                  ?_tmr0 0070  
+      __end_of___lbmod 01B7                  _ANSEL 009F                  _T1CON 0010                  _T2CON 0012  
+                _GPIO0 0028                  _GPIO1 0029                  _GPIO3 002B                  _GPIO4 002C  
+                _GPIO5 002D                  i1l443 0169                  i1l437 0138                  _TMR1H 000F  
+                _TMR1L 000E                  _alarm 0031                  _togel 0038         __pbitbssCOMMON 03E8  
+                pclath 000A                  status 0003                  wtemp0 007E   __size_of_fnInputpins 006D  
+         __end_of_main 0224           __end_of_tmr0 0172                 ??_main 003E                 ??_tmr0 0074  
+               _ADCON0 001F                 _CCPR1L 0013                 _CMCON0 0019          ?_lightingled1 0070  
+               i1l1224 0000                 i1l2410 0000                 i1l2402 0163                 i1l2420 0000  
+               i1l2404 0000                 i1l2414 00CA                 i1l2406 0000                 i1l2440 00E7  
+               i1l2432 0000                 i1l2424 00D8                 i1l2416 00CB                 i1l2360 0000  
+               i1l2450 00F4                 i1l2370 0133                 i1l2460 0101                 i1l2444 0000  
+               i1l2436 00E6                 i1l2428 00D9                 i1l2380 0000                 i1l2364 0000  
+               i1l2454 0000                 i1l2390 0000                 i1l2382 0000                 i1l2366 0000  
+               i1l2480 011B                 i1l2472 010F                 i1l2464 0000                 i1l2448 00F3  
+               i1l2384 0000                 i1l2368 0000                 i1l2490 0129                 i1l2482 011C  
+               i1l2458 0100                 i1l2394 0154                 i1l2476 0000                 i1l2468 010E  
+               i1l2486 0000                 i1l2494 0000                 i1l2398 015E                 _INTCON 000B  
+               _OSCCON 008F                 _TMR1IE 0460                 _TMR1IF 0060                 _OPTION 0081  
+               _TRISIO 0085       __end_of_fnPodgot 019B                 _adDoor 007B       __end_of_mainled1 00BE  
+            ??___lbmod 003A                 _fnPwm1 01CE                 clrloop 0225                 saved_w 007E  
+           _adKeyPower 002F         ??_lightingled1 003E        ___lbmod@divisor 0039        ___lbmod@counter 003C  
+__size_of_blankingled1 0017         __pcstackCOMMON 0070           __pidataBANK0 0000             __pbssBANK0 0020  
+         _blankingled1 01B7     __size_of_gotosleep 0010             __pmaintext 0218                ?_fnPwm1 0070  
+           __pintentry 0004                _CCP1CON 0015             _flagtimer1 03E8             _flagtimer2 03E9  
+           _flagtimer3 03EA              ?_fnPodgot 0070              ?_mainled1 0070             _keyPowerOn 0041  
+              _adAlarm 0079                _adDoor2 007C                ___lbmod 019B        __size_of_fnPwm1 000B  
+ __end_of_lightingled1 01F7                _alarmOn 0032                fnPwm1@n 0070             ??_fnPodgot 0039  
+    __end_of_gotosleep 0218   end_of_initialization 0206             ??_mainled1 003E          ??_fnInputpins 0070  
+          _adKeyInLock 002D            _adKeyPower2 0030       ___lbmod@dividend 003B            ___lbmod@rem 003D  
+         _keyInLockOff 0035    __end_of_fnInputpins 012B         __end_of_fnPwm1 01D9    start_initialization 01F7  
+__size_of_lightingled1 0012               ??_fnPwm1 0072            __pdataBANK0 003E            __pbssCOMMON 0077  
+        __pcstackBANK0 0039      __size_of_fnPodgot 0029           _lightingled1 01E5            _fnInputpins 00BE  
+    __size_of_mainled1 00B1              __ptext260 00BE              __ptext252 000D              __ptext261 0000  
+            __ptext253 01B7              __ptext254 01E5              __ptext255 019B              __ptext256 0172  
+            __ptext257 0208              __ptext258 012B              __ptext259 01CE               ?___lbmod 0039  
+            _flagalarm 0034              _doorClose 003F              _gotosleep 0208      interrupt_function 0004  
+          _keyInLockOn 0040             ?_gotosleep 0070            _keyPowerOff 0036               _adAlarm2 007A  
+     __size_of___lbmod 001C               _alarmOff 003E               _fnPodgot 0172               _doorOpen 0033  
+        ?_blankingled1 0070               _mainled1 000D          __size_of_main 000C          __size_of_tmr0 0047  
+             clear_ram 0224               _tmrSleep 0077               _pwmduty1 002B         ??_blankingled1 003E  
+         _adKeyInLock2 002E               intlevel1 0000            ??_gotosleep 0039           ?_fnInputpins 0070  
